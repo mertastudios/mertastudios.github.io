@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merta Projects</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --accent-blue: #0055ff;
+            --accent-blue-hover: #003cc8;
+            --border-color: #dddddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            /* Eckig, keine Border-Radius */
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            animation: fadeInSlideUp 0.5s ease forwards;
+        }
+
+        .section.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Section */
+        #hero-section {
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Buttons */
+        button {
+            background-color: transparent;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 15px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .btn-blue {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+        }
+
+        .btn-blue:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .btn-back {
+            margin-bottom: 20px;
+            align-self: flex-start;
+            font-size: 0.85rem;
+            padding: 10px 20px;
+        }
+
+        .btn-back:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* Scrolling Frames (Lists) */
+        .scrolling-frame {
+            max-height: 70vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            /* Scrollbar Styling */
+            scrollbar-width: thin;
+        }
+
+        .scrolling-frame::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrolling-frame::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+        }
+
+        /* List Items (Categories & Projects) */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: var(--bg-color);
+        }
+
+        .list-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0px var(--border-color);
+        }
+
+        .item-icon {
+            font-size: 2rem;
+            margin-right: 20px;
+            width: 50px;
+            text-align: center;
+        }
+
+        .item-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .item-content p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .item-meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://via.placeholder.com/40" alt="Merta Projects Icon" class="logo">
+    </header>
+
+    <main>
+        <div id="hero-section" class="section active">
+            <button class="btn-blue" onclick="showCategories()">Explore Projects</button>
+        </div>
+
+        <div id="categories-section" class="section">
+            <h2 style="margin-bottom: 20px; text-transform: uppercase;">Categories</h2>
+            <div class="scrolling-frame" id="categories-container">
+                </div>
+        </div>
+
+        <div id="projects-section" class="section">
+            <button class="btn-back" onclick="showCategories()">← Back to Categories</button>
+            <h2 id="current-category-title" style="margin-bottom: 20px; text-transform: uppercase;">Projects</h2>
+            <div class="scrolling-frame" id="projects-container">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        /* --- JAVASCRIPT & DATA --- */
+
+        // HIER KANNST DU DEINE KATEGORIEN UND PROJEKTE GANZ EINFACH ANPASSEN
+        const portfolioData = [
+            {
+                id: "web-dev",
+                title: "Web Development",
+                description: "Frontend and Backend web applications.",
+                icon: "💻", 
+                projects: [
+                    {
+                        title: "E-Commerce Store",
+                        date: "Oct 2025",
+                        description: "A fully functional online store built with React.",
+                        icon: "🛒",
+                        url: "https://github.com/yourusername/ecommerce"
+                    },
+                    {
+                        title: "Personal Blog",
+                        date: "Jan 2026",
+                        description: "A minimalist blog platform using static HTML.",
+                        icon: "📝",
+                        url: "https://github.com/yourusername/blog"
+                    }
+                ]
+            },
+            {
+                id: "games",
+                title: "Game Development",
+                description: "Small indie games and prototypes.",
+                icon: "🎮",
+                projects: [
+                    {
+                        title: "Space Shooter",
+                        date: "Mar 2026",
+                        description: "A 2D arcade shooter made with Unity.",
+                        icon: "🚀",
+                        url: "https://github.com/yourusername/space-shooter"
+                    }
+                ]
+            },
+            {
+                id: "ui-ux",
+                title: "UI/UX Design",
+                description: "User interface designs and mockups.",
+                icon: "🎨",
+                projects: [
+                    {
+                        title: "Banking App Concept",
+                        date: "May 2026",
+                        description: "Figma design for a modern mobile banking app.",
+                        icon: "📱",
+                        url: "https://figma.com/..."
+                    }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const heroSection = document.getElementById('hero-section');
+        const categoriesSection = document.getElementById('categories-section');
+        const projectsSection = document.getElementById('projects-section');
+        const categoriesContainer = document.getElementById('categories-container');
+        const projectsContainer = document.getElementById('projects-container');
+        const currentCategoryTitle = document.getElementById('current-category-title');
+
+        // Initialize Categories
+        function renderCategories() {
+            categoriesContainer.innerHTML = '';
+            portfolioData.forEach(category => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'list-item';
+                catDiv.onclick = () => showProjects(category.id);
+                
+                catDiv.innerHTML = `
+                    <div class="item-icon">${category.icon}</div>
+                    <div class="item-content">
+                        <h3>${category.title}</h3>
+                        <p>${category.description}</p>
+                    </div>
+                `;
+                categoriesContainer.appendChild(catDiv);
+            });
+        }
+
+        // Initialize Projects for a specific category
+        function renderProjects(categoryId) {
+            projectsContainer.innerHTML = '';
+            const category = portfolioData.find(c => c.id === categoryId);
+            
+            if (category) {
+                currentCategoryTitle.innerText = category.title;
+                category.projects.forEach(project => {
+                    const projLink = document.createElement('a');
+                    projLink.href = project.url;
+                    projLink.target = '_blank'; // Opens in new tab
+                    projLink.className = 'list-item';
+                    
+                    projLink.innerHTML = `
+                        <div class="item-icon">${project.icon}</div>
+                        <div class="item-content">
+                            <span class="item-meta">${project.date}</span>
+                            <h3>${project.title}</h3>
+                            <p>${project.description}</p>
+                        </div>
+                    `;
+                    projectsContainer.appendChild(projLink);
+                });
+            }
+        }
+
+        // Navigation Functions
+        function hideAllSections() {
+            heroSection.classList.remove('active');
+            categoriesSection.classList.remove('active');
+            projectsSection.classList.remove('active');
+        }
+
+        function showCategories() {
+            hideAllSections();
+            renderCategories();
+            // Timeout ensures animation triggers by briefly delaying the class addition
+            setTimeout(() => {
+                categoriesSection.classList.add('active');
+            }, 50);
+        }
+
+        function showProjects(categoryId) {
+            hideAllSections();
+            renderProjects(categoryId);
+            setTimeout(() => {
+                projectsSection.classList.add('active');
+            }, 50);
+        }
+
+    </script>
+</body>
+</html>
